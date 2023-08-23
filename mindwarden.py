@@ -23,7 +23,10 @@
 import random
 import time
 from functools import reduce
+import os
+import sys
 
+WARDEN_FILE = os.path.join(os.path.expanduser("~"), ".warden/warden.conf")
 
 # Color codes
 RESET =   "\033[0m"
@@ -34,9 +37,14 @@ LMAG =    "\033[96m"
 
 DEEDS = [
 #   Deed                     Weight
-    ("The Last Spell",          5),
-    ("The Book of Hours",       5),
-    ("The Longing",             2),
+    ("The Last Spell",          6),
+    #("The Book of Hours",       7), Until Last Spell finish
+    #("The Longing",             3), Until This War Of Mine finish
+    ("This War of Mine",        3),
+    ("Gods Will Be Watching",   4),
+    ("The Work",                2),
+    ("The Station Deeds",       2),
+    ("The Knowledge",           4),
 ]
 
 
@@ -70,17 +78,35 @@ def test_weighted_choice():
     print(f"Probability distribution test results:\n{percented_stats}")
 
 
+def record(deed):
+    with open(WARDEN_FILE, 'w') as f:
+        f.write(deed)
+
+
+def show_last_deed():
+    with open(WARDEN_FILE, 'r') as f:
+        last_deed = f.read()
+        print(last_deed)
+
+
 #===================== MAIN =====================
 
 def main():
-	# TODO: color
-    print("[ " ,LGREEN, "Station argus report", RESET, " ]", sep="")
-    time.sleep(0.6)
-    print("[ ", LGREEN, "Current date: ", RESET, "10.10.2078 ]", sep="")
-    time.sleep(0.6)
-    print("[ ", BOLD, LMAG, "Mindwarden", RESET, " launch ]", sep="")
-    deed = weighted_choice(DEEDS)
-    print("Deed: ", BOLD, deed, RESET, sep="")
+    if len(sys.argv) > 1:
+        arg = sys.argv[1]
+        if arg == "--last":
+            show_last_deed()
+        elif arg == "--run":
+            print("[ " ,LGREEN, "Station argus report", RESET, " ]", sep="")
+            time.sleep(0.6)
+            print("[ ", LGREEN, "Current date: ", RESET, "10.10.2078 ]", sep="")
+            time.sleep(0.6)
+            print("[ ", BOLD, LMAG, "Mindwarden", RESET, " launch ]", sep="")
+            deed = weighted_choice(DEEDS)
+            record(deed)
+            print("Deed: ", BOLD, deed, RESET, sep="")
+    else:
+        print("--run for run, --last for last")
 
 #================================================
 
