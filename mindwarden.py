@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # List
-# - use colored ouput
-# - use animated output
+# - [x] use colored ouput
+# - [x] use animated output
 # - no library module for now
 # - v2: use sqlite module for table
 # - v2: table keeps balance weights
 # - v2: table keeps stats
-# - enable as global script via scriptrunner
 # Created by: Sarif Industries
 
 
@@ -33,9 +32,21 @@ RESET =   "\033[0m"
 BOLD =    "\033[1m"
 GREEN =   "\033[32m"
 LGREEN =  "\033[92m"
-LMAG =    "\033[96m"
+LCYN =    "\033[96m"
+
 
 DEEDS = [
+    ("Endless Space 2, Small Ops Flow",   5),
+    ("Echo of The Wilds Enjoyer", 4),
+    ("GTFO Expeditions Enjoyer", 3),
+    ("Factorio Station Enjoyer", 4),
+    # ("Deus Ex Mankind Divided", 4),
+    # ("Death Stranding", 4),
+    # ("The Book of Hours",       7),
+]
+
+
+OLD_DEEDS = """[
 #   Deed                     Weight
     ("The Last Spell",          6),
     #("The Book of Hours",       7), Until Last Spell finish
@@ -46,7 +57,7 @@ DEEDS = [
     ("The Station Deeds",       2),
     ("The Knowledge",           4),
 ]
-
+"""
 
 """
     Выбор элемента в соответствии с его весом.
@@ -92,6 +103,7 @@ def show_last_deed():
 #===================== MAIN =====================
 
 def main():
+    os.makedirs(os.path.dirname(WARDEN_FILE), exist_ok=True)
     if len(sys.argv) > 1:
         arg = sys.argv[1]
         if arg == "--last":
@@ -101,12 +113,14 @@ def main():
             time.sleep(0.6)
             print("[ ", LGREEN, "Current date: ", RESET, "10.10.2078 ]", sep="")
             time.sleep(0.6)
-            print("[ ", BOLD, LMAG, "Mindwarden", RESET, " launch ]", sep="")
+            print("[ ", BOLD, LCYN, "Mindwarden", RESET, " launch ]", sep="")
             deed = weighted_choice(DEEDS)
             record(deed)
             print("Deed: ", BOLD, deed, RESET, sep="")
+        elif arg == "--test":
+            test_weighted_choice()
     else:
-        print("--run for run, --last for last")
+        print("--run for run, --last for last, --test for test")
 
 #================================================
 
